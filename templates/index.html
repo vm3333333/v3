@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <title>Fund Dashboard</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Fund Dashboard</h1>
+        <table class="table table-striped" id="fundTable">
+            <thead>
+                <tr>
+                    <th>Fund Name</th>
+                    <th>Region</th>
+                    <th>Risk Level</th>
+                    <th>Management Type</th>
+                    <th>Number of Assets</th>
+                    <th>Ongoing Charge (OCF)</th>
+                    <th>Performance (May 2019 - Apr 2020)</th>
+                    <th>Performance (May 2020 - Apr 2021)</th>
+                    <th>Performance (May 2021 - Apr 2022)</th>
+                    <th>Performance (May 2022 - Apr 2023)</th>
+                    <th>Performance (May 2023 - Apr 2024)</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $.get('/get_funds', function(data) {
+                let funds = JSON.parse(data);
+                let tableBody = $('#fundTable tbody');
+                funds.forEach(fund => {
+                    let row = `<tr>
+                        <td>${fund['Fund Name']}</td>
+                        <td>${fund['Region']}</td>
+                        <td>${fund['Risk Level']}</td>
+                        <td>${fund['Management Type']}</td>
+                        <td>${fund['Number of Assets']}</td>
+                        <td>${fund['Ongoing Charge (OCF)']}</td>
+                        <td>${fund['May 2019 - Apr 2020']}</td>
+                        <td>${fund['May 2020 - Apr 2021']}</td>
+                        <td>${fund['May 2021 - Apr 2022']}</td>
+                        <td>${fund['May 2022 - Apr 2023']}</td>
+                        <td>${fund['May 2023 - Apr 2024']}</td>
+                    </tr>`;
+                    tableBody.append(row);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
