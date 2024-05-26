@@ -45,11 +45,16 @@ function updateShortlistTable() {
 
         headers.slice(1).forEach(header => {
             const td = document.createElement('td');
-            if (typeof row[header] === 'number') {
-                td.textContent = formatNumber(row[header]);
-                applyConditionalFormatting(td, row[header]);
+            let cellValue = row[header];
+            if (typeof cellValue === 'number') {
+                if (header.includes('Performance') || header.includes('Volatility')) {
+                    td.textContent = formatPercentage(cellValue);
+                    applyConditionalFormatting(td, cellValue);
+                } else {
+                    td.textContent = formatNumber(cellValue);
+                }
             } else {
-                td.textContent = row[header];
+                td.textContent = cellValue;
             }
             tr.appendChild(td);
         });

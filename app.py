@@ -6,14 +6,14 @@ app = Flask(__name__)
 performance_cols = ['May 2019 - Apr 2020', 'May 2020 - Apr 2021', 'May 2021 - Apr 2022', 'May 2022 - Apr 2023', 'May 2023 - Apr 2024']
 
 def load_data():
-    df = pd.read_csv('portfolio_data.csv')
+    df = pd.read_csv('static/portfolio_data.csv')
     df[performance_cols] = df[performance_cols].apply(pd.to_numeric, errors='coerce')
     df['Performance Average'] = df[performance_cols].mean(axis=1)
     df['Overall Volatility'] = df[performance_cols].std(axis=1)
     return df
 
 def save_data(df):
-    df.to_csv('portfolio_data.csv', index=False)
+    df.to_csv('static/portfolio_data.csv', index=False)
 
 @app.route('/')
 def index():

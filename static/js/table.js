@@ -9,12 +9,11 @@ function formatPercentage(value) {
     return (parseFloat(value) * 100).toFixed(2) + '%';
 }
 
-// Define or remove applyConditionalFormatting if not needed
 function applyConditionalFormatting(td, value) {
     if (value >= 0) {
-        td.style.backgroundColor = 'lightgreen';
+        td.classList.add('high-performance');
     } else {
-        td.style.backgroundColor = 'lightcoral';
+        td.classList.add('low-performance');
     }
 }
 
