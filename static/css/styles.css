@@ -1,39 +1,33 @@
-/* Replace left with inset-inline-start */
-element {
-    inset-inline-start: 0; /* was left: 0; */
+/* static/css/styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
 }
 
-/* Replace top with inset-block-start */
-element {
-    inset-block-start: 0; /* was top: 0; */
+header {
+    background-color: #0073e6;
+    color: #fff;
+    padding: 1rem;
+    text-align: center;
 }
 
-/* Replace width with inline-size */
-element {
-    inline-size: 100%; /* was width: 100%; */
+.container {
+    padding: 2rem;
 }
 
-/* Replace height with block-size */
-element {
-    block-size: 100%; /* was height: 100%; */
+.filter-section, .table-section, .shortlist-section {
+    margin-bottom: 2rem;
 }
 
-/* Replace width with inline-size */
-another-element {
-    inline-size: 80%; /* was width: 80%; */
-}
-
-/* Replace float: right with float: inline-end */
-another-element {
-    float: inline-end; /* was float: right; */
-}
-
-/* Replace margin-bottom with margin-block-end */
-yet-another-element {
-    margin-block-end: 20px; /* was margin-bottom: 20px; */
-}
-
-/* Replace text-align: left with text-align: start */
-text-element {
-    text-align: start; /* was text-align: left; */
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1rem;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
 }

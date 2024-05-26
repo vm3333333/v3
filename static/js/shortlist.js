@@ -1,88 +1,79 @@
-function handleSelection(row, isSelected) {
-    if (isSelected) {
-        shortlistedFunds.push(row);
-        investmentAllocations[row['Fund Name']] = 0;  // Initialize allocation to 0
-    } else {
-        shortlistedFunds = shortlistedFunds.filter(fund => fund['Fund Name'] !== row['Fund Name']);
-        delete investmentAllocations[row['Fund Name']];
-    }
-    updateShortlistTable();
-    updateTotalInvestment();
-}
+// static/js/shortlist.js
 
-function updateShortlistTable() {
-    const table = document.getElementById('shortlist-table');
-    table.innerHTML = '';  // Clear any existing content
-
-    const headers = ['Select', 'Fund Name', 'Region', 'Performance Average', 'Overall Volatility', 'Allocation (%)'];
-
-    // Create table header
-    const thead = document.createElement('thead');
-    const headerRow = document.createElement('tr');
-    headers.forEach(header => {
-        const th = document.createElement('th');
-        th.textContent = header;
-        headerRow.appendChild(th);
+document.addEventListener('DOMContentLoaded', function() {
+    const fundTable = document.getElementById('fund-table');
+    
+    fundTable.addEventListener('change', function(event) {
+        if (event.target.classList.contains('select-fund')) {
+            updateShortlist();
+        }
     });
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
 
-    // Create table body
-    const tbody = document.createElement('tbody');
-    shortlistedFunds.forEach(row => {
-        const tr = document.createElement('tr');
-
-        // Add checkbox for selection
-        const tdSelect = document.createElement('td');
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.checked = true;  // Default to checked since it's in the shortlist
-        checkbox.addEventListener('change', function() {
-            handleSelection(row, this.checked);
-        });
-        tdSelect.appendChild(checkbox);
-        tr.appendChild(tdSelect);
-
-        headers.slice(1).forEach(header => {
-            const td = document.createElement('td');
-            let cellValue = row[header];
-            if (typeof cellValue === 'number') {
-                if (header.includes('Performance') || header.includes('Volatility')) {
-                    td.textContent = formatPercentage(cellValue);
-                    applyConditionalFormatting(td, cellValue);
-                } else {
-                    td.textContent = formatNumber(cellValue);
-                }
-            } else {
-                td.textContent = cellValue;
+    function updateShortlist() {
+        const selectedFunds = [];
+        const rows = fundTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+        
+        for (let row of rows) {
+            const checkbox = row.querySelector('.select-fund');
+            if (checkbox && checkbox.checked) {
+                const fundData = {};
+                const cells = row.getElementsByTagName('td');
+                fundData['Fund Name'] = cells[0].textContent;
+                fundData['Region'] = cells[1].textContent;
+                fundData['Risk Level'] = cells[2].textContent;
+                fundData['Management Type'] = cells[3].textContent;
+                fundData['Number of Assets'] = cells[4].textContent;
+                fundData['Ongoing Charge (OCF)'] = cells[5].textContent;
+                fundData['Performance (May 2019 - Apr 2020)'] = cells[6].textContent;
+                fundData['Performance (May 2020 - Apr 2021)'] = cells[7].textContent;
+                fundData['Performance (May 2021 - Apr 2022)'] = cells[8].textContent;
+                fundData['Performance (May 2022 - Apr 2023)'] = cells[9].textContent;
+                fundData['Performance (May 2023 - Apr 2024)'] = cells[10].textContent;
+                fundData['Performance Average'] = cells[11].textContent;
+                fundData['Overall Volatility'] = cells[12].textContent;
+                selectedFunds.push(fundData);
             }
-            tr.appendChild(td);
+        }
+
+        populateShortlist(selectedFunds);
+    }
+
+    function populateShortlist(selectedFunds) {
+        const shortlistSection = document.querySelector('.shortlist-section');
+        shortlistSection.innerHTML = '<h2>Shortlisted Funds</h2>';
+        
+        if (selectedFunds.length === 0) {
+            shortlistSection.innerHTML += '<p>No funds selected.</p>';
+            return;
+        }
+        
+        const table = document.createElement('table');
+        const thead = document.createElement('thead');
+        const tbody = document.createElement('tbody');
+        const headerRow = document.createElement('tr');
+        
+        const headers = ['Fund Name', 'Region', 'Risk Level', 'Management Type', 'Number of Assets', 'Ongoing Charge (OCF)', 'Performance (May 2019 - Apr 2020)', 'Performance (May 2020 - Apr 2021)', 'Performance (May 2021 - Apr 2022)', 'Performance (May 2022 - Apr 2023)', 'Performance (May 2023 - Apr 2024)', 'Performance Average', 'Overall Volatility'];
+        
+        headers.forEach(header => {
+            const th = document.createElement('th');
+            th.textContent = header;
+            headerRow.appendChild(th);
         });
-
-        // Add input for allocation
-        const tdAlloc = document.createElement('td');
-        const inputAlloc = document.createElement('input');
-        inputAlloc.type = 'number';
-        inputAlloc.min = 0;
-        inputAlloc.max = 100;
-        inputAlloc.value = investmentAllocations[row['Fund Name']] || 0;
-        inputAlloc.addEventListener('input', function() {
-            investmentAllocations[row['Fund Name']] = parseFloat(this.value) || 0;
-            updateTotalInvestment();
+        
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+        
+        selectedFunds.forEach(fund => {
+            const row = document.createElement('tr');
+            headers.forEach(header => {
+                const cell = document.createElement('td');
+                cell.textContent = fund[header];
+                row.appendChild(cell);
+            });
+            tbody.appendChild(row);
         });
-        tdAlloc.appendChild(inputAlloc);
-        tr.appendChild(tdAlloc);
-
-        tbody.appendChild(tr);
-    });
-    table.appendChild(tbody);
-
-    // Log the shortlisted funds
-    console.log('Shortlisted funds updated:', shortlistedFunds);
-}
-
-function updateTotalInvestment() {
-    const totalInvestment = Object.values(investmentAllocations).reduce((acc, val) => acc + val, 0);
-    document.getElementById('total-investment').textContent = `Total Investment: ${formatNumber(totalInvestment)}%`;
-    console.log('Total investment updated:', totalInvestment);
-}
+        
+        table.appendChild(tbody);
+        shortlistSection.appendChild(table);
+    }
+});

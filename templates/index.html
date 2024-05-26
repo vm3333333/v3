@@ -1,72 +1,38 @@
+<!-- templates/index.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fund Dashboard</title>
-    <link rel="stylesheet" href="static/css/styles.css">
-    <link rel="stylesheet" href="static/css/table.css">
-    <link rel="stylesheet" href="static/css/conditional_formatting.css">
+    <title>Fund Portfolio</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-    <div>
-        <h1>Fund Dashboard</h1>
-        <div>
-            <h2>Filters</h2>
-            <label for="volatility-range">Volatility Range:</label>
-            <input type="number" id="volatility-min" step="0.01">
-            <input type="number" id="volatility-max" step="0.01">
-            <label for="performance-range">Performance Range:</label>
-            <input type="number" id="performance-min" step="0.01">
-            <input type="number" id="performance-max" step="0.01">
-            <label for="favourites-only">Show Favourites Only:</label>
-            <input type="checkbox" id="favourites-only">
-        </div>
-        <h2>Shortlisted Funds</h2>
-        <table id="shortlisted-funds-table">
-            <thead>
-                <tr>
-                    <th>Select</th>
-                    <th>Fund Name</th>
-                    <th>Region</th>
-                    <th>Performance Average</th>
-                    <th>Overall Volatility</th>
-                    <th>Allocation (%)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Shortlisted funds will be dynamically inserted here -->
-            </tbody>
-        </table>
-        <h2>All Funds</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Select</th>
-                    <th>Fund Name</th>
-                    <th>Region</th>
-                    <th>Risk Level</th>
-                    <th>Management Type</th>
-                    <th>Number of Assets</th>
-                    <th>Ongoing Charge (OCF)</th>
-                    <th>May 2019 - Apr 2020</th>
-                    <th>May 2020 - Apr 2021</th>
-                    <th>May 2021 - Apr 2022</th>
-                    <th>May 2022 - Apr 2023</th>
-                    <th>May 2023 - Apr 2024</th>
-                    <th>Performance Average</th>
-                    <th>Overall Volatility</th>
-                </tr>
-            </thead>
-            <tbody id="funds-table-body"></tbody>
-        </table>
-        
-                <!-- All funds will be dynamically inserted here -->
-            </tbody>
-        </table>
-    </div>
-    <script src="static/js/init.js"></script>
-    <script src="static/js/table.js"></script>
-    <script src="static/js/filters.js"></script>
+    <table id="fund-table">
+        <thead>
+            <tr>
+                <th>Fund Name</th>
+                <th>Region</th>
+                <th>Risk Level</th>
+                <th>Management Type</th>
+                <th>Number of Assets</th>
+                <th>Ongoing Charge (OCF)</th>
+                <th>May 2019 - Apr 2020</th>
+                <th>May 2020 - Apr 2021</th>
+                <th>May 2021 - Apr 2022</th>
+                <th>May 2022 - Apr 2023</th>
+                <th>May 2023 - Apr 2024</th>
+                <th>Performance Average</th>
+                <th>Overall Volatility</th>
+                <th>Select</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Table rows will be populated by JavaScript -->
+        </tbody>
+    </table>
+
+    <script src="/static/js/init.js"></script>
 </body>
 </html>

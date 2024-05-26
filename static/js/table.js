@@ -1,27 +1,28 @@
-function populateTable(data) {
-    const tableBody = document.getElementById('funds-table-body');
-    tableBody.innerHTML = ''; // Clear the table body
+// static/js/table.js
 
-    data.forEach(item => {
-        console.log('Processing item:', item); // Debugging statement
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td><input type="checkbox" /></td>
-            <td>${item['Fund Name']}</td>
-            <td>${item['Region']}</td>
-            <td>${item['Risk Level']}</td>
-            <td>${item['Management Type']}</td>
-            <td>${item['Number of Assets']}</td>
-            <td>${item['Ongoing Charge (OCF)']}</td>
-            <td>${item['May 2019 - Apr 2020']}</td>
-            <td>${item['May 2020 - Apr 2021']}</td>
-            <td>${item['May 2021 - Apr 2022']}</td>
-            <td>${item['May 2022 - Apr 2023']}</td>
-            <td>${item['May 2023 - Apr 2024']}</td>
-            <td>${item['Performance Average']}</td>
-            <td>${item['Overall Volatility']}</td>
-        `;
-        tableBody.appendChild(row);
+document.addEventListener('DOMContentLoaded', function() {
+    const fundTable = document.getElementById('fund-table');
+
+    fundTable.addEventListener('change', function(event) {
+        if (event.target.classList.contains('select-fund')) {
+            updateRowStyle(event.target.closest('tr'));
+        }
     });
-    
-}
+
+    function updateRowStyle(row) {
+        const performanceAverage = parseFloat(row.querySelector('td:nth-child(12)').textContent);
+        if (performanceAverage > 0) {
+            row.classList.add('high-performance');
+            row.classList.remove('low-performance');
+        } else {
+            row.classList.add('low-performance');
+            row.classList.remove('high-performance');
+        }
+    }
+
+    // Initialize table styles
+    const rows = fundTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    for (let row of rows) {
+        updateRowStyle(row);
+    }
+});
