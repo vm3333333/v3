@@ -1,28 +1,28 @@
-/* Modal styles */
+/* Modal styling */
 .modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    inset-inline-start: 0; /* Logical equivalent to left: 0; */
+    inset-block-start: 0; /* Logical equivalent to top: 0; */
+    inline-size: 100%; /* Logical equivalent to width: 100%; */
+    block-size: 100%; /* Logical equivalent to height: 100%; */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
 .modal-content {
     background-color: #fefefe;
-    margin: 15% auto;
+    margin-block-start: 15%; /* 15% from the top and centered */
+    margin-inline: auto; /* Centered horizontally */
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
+    inline-size: 80%; /* Logical equivalent to width: 80%; */
 }
 
 .close {
     color: #aaa;
-    float: right;
+    float: inline-end; /* Logical equivalent to float: right; */
     font-size: 28px;
     font-weight: bold;
 }

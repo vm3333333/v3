@@ -1,36 +1,88 @@
-{% extends "layout.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/nouislider/distribute/nouislider.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+</head>
+<body>
+    {% block content %}
+    <div>
+        <h2>Filters</h2>
+        <div>
+            <label for="volatility-filter">Volatility Range:</label>
+            <input type="number" id="volatility-filter-min" min="0" step="0.01">
+            <div id="volatility-filter-range"></div>
+            <input type="number" id="volatility-filter-max" min="0" step="0.01">
+        </div>
+        <div>
+            <label for="performance-filter">Performance Range:</label>
+            <input type="number" id="performance-filter-min" min="0" step="0.01">
+            <div id="performance-filter-range"></div>
+            <input type="number" id="performance-filter-max" min="0" step="0.01">
+        </div>
+        <div>
+            <label for="favourites-filter">Show Favourites Only:</label>
+            <input type="checkbox" id="favourites-filter">
+        </div>
+    </div>
+    <div>
+        <h2>Shortlisted Funds</h2>
+        <table id="shortlist-table">
+            <!-- Shortlist table contents will be populated dynamically -->
+        </table>
+    </div>
+    <div>
+        <h2>All Funds</h2>
+        <table id="fund-table">
+            <!-- Fund table contents will be populated dynamically -->
+        </table>
+    </div>
+    <div>
+        <h2>Total Investment</h2>
+        <p id="total-investment">Total Investment: 0%</p>
+    </div>
 
-{% block content %}
-<div>
-    <h2>Filters</h2>
-    <div>
-        <label for="volatility-filter">Volatility:</label>
-        <input type="number" id="volatility-filter" min="0" step="0.01">
+    <!-- Add New Fund Modal -->
+    <div id="add-fund-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add New Fund</h2>
+            <form id="add-fund-form">
+                <label for="fund-name">Fund Name:</label>
+                <input type="text" id="fund-name" name="fund_name" required>
+                <label for="region">Region:</label>
+                <input type="text" id="region" name="region" required>
+                <label for="risk-level">Risk Level:</label>
+                <input type="number" id="risk-level" name="risk_level" required>
+                <label for="management-type">Management Type:</label>
+                <input type="text" id="management-type" name="management_type" required>
+                <label for="number-of-assets">Number of Assets:</label>
+                <input type="number" id="number-of-assets" name="number_of_assets" required>
+                <label for="ongoing-charge">Ongoing Charge (OCF):</label>
+                <input type="text" id="ongoing-charge" name="ongoing_charge" required>
+                <label for="performance-2019-2020">Performance (May 2019 - Apr 2020):</label>
+                <input type="number" id="performance-2019-2020" name="performance_2019_2020" step="0.01" required>
+                <label for="performance-2020-2021">Performance (May 2020 - Apr 2021):</label>
+                <input type="number" id="performance-2020-2021" name="performance_2020_2021" step="0.01" required>
+                <label for="performance-2021-2022">Performance (May 2021 - Apr 2022):</label>
+                <input type="number" id="performance-2021-2022" name="performance_2021_2022" step="0.01" required>
+                <label for="performance-2022-2023">Performance (May 2022 - Apr 2023):</label>
+                <input type="number" id="performance-2022-2023" name="performance_2022_2023" step="0.01" required>
+                <label for="performance-2023-2024">Performance (May 2023 - Apr 2024):</label>
+                <input type="number" id="performance-2023-2024" name="performance_2023_2024" step="0.01" required>
+                <button type="submit">Add Fund</button>
+            </form>
+        </div>
     </div>
-    <div>
-        <label for="performance-filter">Performance:</label>
-        <input type="number" id="performance-filter" min="0" step="0.01">
-    </div>
-    <div>
-        <label for="favourites-filter">Show Favourites Only:</label>
-        <input type="checkbox" id="favourites-filter">
-    </div>
-    <button id="apply-filters">Apply Filters</button>
-</div>
-<div>
-    <h2>Shortlisted Funds</h2>
-    <table id="shortlist-table">
-        <!-- Shortlist table contents will be populated dynamically -->
-    </table>
-</div>
-<div>
-    <h2>All Funds</h2>
-    <table id="fund-table">
-        <!-- Fund table contents will be populated dynamically -->
-    </table>
-</div>
-<div>
-    <h2>Total Investment</h2>
-    <p id="total-investment">Total Investment: 0%</p>
-</div>
-{% endblock %}
+
+    <!-- Include Add Fund Button -->
+    <button id="open-add-fund-modal">Add New Fund</button>
+
+    <!-- Include the split JavaScript files -->
+    <script src="https://cdn.jsdelivr.net/npm/nouislider/distribute/nouislider.min.js"></script>
+    <script src="{{ url_for('static', filename='js/init.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/table.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/filters.js') }}"></script>
+    {% endblock %}
+</body>
+</html>
