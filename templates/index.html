@@ -3,15 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <title>Fund Dashboard</title>
 </head>
 <body>
     <div class="container">
         <h1 class="mt-5">Fund Dashboard</h1>
+        <button class="btn btn-primary mb-3" id="addFundBtn">Add Fund</button>
+        <button class="btn btn-secondary mb-3" id="bulkUpdateBtn">Bulk Update</button>
+
         <table class="table table-striped" id="fundTable">
             <thead>
                 <tr>
+                    <th>Select</th>
                     <th>Fund Name</th>
                     <th>Region</th>
                     <th>Risk Level</th>
@@ -27,31 +32,121 @@
             </thead>
             <tbody></tbody>
         </table>
+
+        <h2>Shortlisted Funds</h2>
+        <table class="table table-striped" id="shortlistTable">
+            <thead>
+                <tr>
+                    <th>Fund Name</th>
+                    <th>Region</th>
+                    <th>Risk Level</th>
+                    <th>Management Type</th>
+                    <th>Number of Assets</th>
+                    <th>Ongoing Charge (OCF)</th>
+                    <th>Performance (May 2019 - Apr 2020)</th>
+                    <th>Performance (May 2020 - Apr 2021)</th>
+                    <th>Performance (May 2021 - Apr 2022)</th>
+                    <th>Performance (May 2022 - Apr 2023)</th>
+                    <th>Performance (May 2023 - Apr 2024)</th>
+                    <th>Investment (%)</th>
+                    <th>Equivalent Sum</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <h3 id="total-investment">Total Investment: 0%</h3>
+        <h3 id="total-equivalent-sum">Total Equivalent Sum: 0</h3>
     </div>
+
+    <!-- Add Fund Modal -->
+    <div class="modal fade" id="addFundModal" tabindex="-1" role="dialog" aria-labelledby="addFundModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addFundModalLabel">Add New Fund</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addFundForm">
+                        <div class="form-group">
+                            <label for="fundName">Fund Name</label>
+                            <input type="text" class="form-control" id="fundName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="region">Region</label>
+                            <input type="text" class="form-control" id="region" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="riskLevel">Risk Level</label>
+                            <input type="number" class="form-control" id="riskLevel" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="managementType">Management Type</label>
+                            <input type="text" class="form-control" id="managementType" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="numberOfAssets">Number of Assets</label>
+                            <input type="number" class="form-control" id="numberOfAssets" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ongoingCharge">Ongoing Charge (OCF)</label>
+                            <input type="text" class="form-control" id="ongoingCharge" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="performance2020">Performance (May 2019 - Apr 2020)</label>
+                            <input type="text" class="form-control" id="performance2020" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="performance2021">Performance (May 2020 - Apr 2021)</label>
+                            <input type="text" class="form-control" id="performance2021" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="performance2022">Performance (May 2021 - Apr 2022)</label>
+                            <input type="text" class="form-control" id="performance2022" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="performance2023">Performance (May 2022 - Apr 2023)</label>
+                            <input type="text" class="form-control" id="performance2023" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="performance2024">Performance (May 2023 - Apr 2024)</label>
+                            <input type="text" class="form-control" id="performance2024" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Fund</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Update Modal -->
+    <div class="modal fade" id="bulkUpdateModal" tabindex="-1" role="dialog" aria-labelledby="bulkUpdateModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bulkUpdateModalLabel">Bulk Update Performance</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="bulkUpdateForm">
+                        <div class="form-group">
+                            <label for="bulkUpdateData">Bulk Update Data (CSV format)</label>
+                            <textarea class="form-control" id="bulkUpdateData" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $.get('/get_funds', function(data) {
-                let funds = JSON.parse(data);
-                let tableBody = $('#fundTable tbody');
-                funds.forEach(fund => {
-                    let row = `<tr>
-                        <td>${fund['Fund Name']}</td>
-                        <td>${fund['Region']}</td>
-                        <td>${fund['Risk Level']}</td>
-                        <td>${fund['Management Type']}</td>
-                        <td>${fund['Number of Assets']}</td>
-                        <td>${fund['Ongoing Charge (OCF)']}</td>
-                        <td>${fund['May 2019 - Apr 2020']}</td>
-                        <td>${fund['May 2020 - Apr 2021']}</td>
-                        <td>${fund['May 2021 - Apr 2022']}</td>
-                        <td>${fund['May 2022 - Apr 2023']}</td>
-                        <td>${fund['May 2023 - Apr 2024']}</td>
-                    </tr>`;
-                    tableBody.append(row);
-                });
-            });
-        });
-    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
