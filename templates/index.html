@@ -1,15 +1,12 @@
-<!-- templates/index.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fund Portfolio</title>
+    <title>Portfolio Data</title>
     <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-    <table id="fund-table">
+    <table id="data-table">
         <thead>
             <tr>
                 <th>Fund Name</th>
@@ -25,14 +22,12 @@
                 <th>May 2023 - Apr 2024</th>
                 <th>Performance Average</th>
                 <th>Overall Volatility</th>
-                <th>Select</th>
             </tr>
         </thead>
-        <tbody>
-            <!-- Table rows will be populated by JavaScript -->
+        <tbody id="table-body">
+            <!-- Data will be populated here by JavaScript -->
         </tbody>
     </table>
-
     <script src="/static/js/init.js"></script>
 </body>
 </html>
