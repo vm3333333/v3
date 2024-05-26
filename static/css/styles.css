@@ -1,94 +1,39 @@
-/* Modal styling */
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    inset-inline-start: 0; /* Logical equivalent to left: 0; */
-    inset-block-start: 0; /* Logical equivalent to top: 0; */
-    inline-size: 100%; /* Logical equivalent to width: 100%; */
-    block-size: 100%; /* Logical equivalent to height: 100%; */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+/* Replace left with inset-inline-start */
+element {
+    inset-inline-start: 0; /* was left: 0; */
 }
 
-.modal-content {
-    background-color: #fefefe;
-    margin-block-start: 15%; /* 15% from the top and centered */
-    margin-inline: auto; /* Centered horizontally */
-    padding: 20px;
-    border: 1px solid #888;
-    inline-size: 80%; /* Logical equivalent to width: 80%; */
+/* Replace top with inset-block-start */
+element {
+    inset-block-start: 0; /* was top: 0; */
 }
 
-.close {
-    color: #aaa;
-    float: inline-end; /* Logical equivalent to float: right; */
-    font-size: 28px;
-    font-weight: bold;
+/* Replace width with inline-size */
+element {
+    inline-size: 100%; /* was width: 100%; */
 }
 
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+/* Replace height with block-size */
+element {
+    block-size: 100%; /* was height: 100%; */
 }
 
-/* Additional styles */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
+/* Replace width with inline-size */
+another-element {
+    inline-size: 80%; /* was width: 80%; */
 }
 
-header {
-    background-color: #333;
-    color: #fff;
-    padding: 10px 0;
-    text-align: center;
+/* Replace float: right with float: inline-end */
+another-element {
+    float: inline-end; /* was float: right; */
 }
 
-main {
-    padding: 20px;
+/* Replace margin-bottom with margin-block-end */
+yet-another-element {
+    margin-block-end: 20px; /* was margin-bottom: 20px; */
 }
 
-h1, h2 {
-    margin: 0 0 20px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-
-th, td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: left;
-}
-
-th {
-    background-color: #f2f2f2;
-}
-
-tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-tr:hover {
-    background-color: #f1f1f1;
-}
-
-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #45a049;
+/* Replace text-align: left with text-align: start */
+text-element {
+    text-align: start; /* was text-align: left; */
 }

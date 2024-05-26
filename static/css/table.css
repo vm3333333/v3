@@ -1,22 +1,9 @@
-.table {
-    inline-size: 100%; /* Logical equivalent to width: 100%; */
-    border-collapse: collapse;
+/* Replace width with inline-size */
+table {
+    inline-size: 100%; /* was width: 100%; */
 }
 
-.table th, .table td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: left;
-}
-
-.table th {
-    background-color: #f2f2f2;
-}
-
-.table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.table tbody tr:hover {
-    background-color: #f1f1f1;
+/* Replace text-align: left with text-align: start */
+table {
+    text-align: start; /* was text-align: left; */
 }
