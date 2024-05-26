@@ -1,7 +1,23 @@
-.high-performance {
-    background-color: #c8e6c9; /* Light green */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
 }
 
-.low-performance {
-    background-color: #ffcdd2; /* Light red */
+h1 {
+    text-align: center;
+}
+
+#fund-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#fund-table th, #fund-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#fund-table th {
+    background-color: #f2f2f2;
 }
