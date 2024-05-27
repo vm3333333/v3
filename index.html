@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Portfolio Manager</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Investment Portfolio Manager</h1>
+    </header>
+    <main>
+        <section id="investment-amount">
+            <label for="investment-input">Total Investment Amount: </label>
+            <input type="number" id="investment-input" placeholder="Enter amount" />
+            <button id="investment-submit">Submit</button>
+        </section>
+        <section id="column-customization">
+            <h2>Customize Columns</h2>
+            <div id="column-controls">
+                <!-- Column customization controls will be dynamically generated -->
+            </div>
+        </section>
+        <section id="filters">
+            <h2>Filters</h2>
+            <div>
+                <label for="region-filter">Region: </label>
+                <select id="region-filter" multiple>
+                    <!-- Options will be dynamically generated -->
+                </select>
+            </div>
+            <div>
+                <label for="risk-filter">Risk Level: </label>
+                <select id="risk-filter" multiple>
+                    <!-- Options will be dynamically generated -->
+                </select>
+            </div>
+            <div>
+                <label for="management-filter">Management Type: </label>
+                <select id="management-filter" multiple>
+                    <!-- Options will be dynamically generated -->
+                </select>
+            </div>
+            <div>
+                <label for="return-filter">Avg. Return: </label>
+                <input type="range" id="return-filter" min="0" max="100" step="1" />
+            </div>
+            <div>
+                <label for="volatility-filter">Volatility: </label>
+                <input type="range" id="volatility-filter" min="0" max="100" step="1" />
+            </div>
+            <button id="filter-submit">Apply Filters</button>
+        </section>
+        <section id="shortlist">
+            <h2>Shortlist</h2>
+            <table id="shortlist-table">
+                <!-- Shortlist table will be dynamically generated -->
+            </table>
+        </section>
+        <section id="main-table">
+            <h2>All Funds</h2>
+            <table id="funds-table">
+                <!-- Funds table will be dynamically generated -->
+            </table>
+        </section>
+    </main>
+    <script src="app.js"></script>
+</body>
+</html>
