@@ -40,46 +40,44 @@ function createAddFundModal() {
     `;
 
     document.getElementById('add-fund-modal').innerHTML = modalHtml;
+
+    // Event Listener for Add Fund Modal
+    document.getElementById('add-fund-form').addEventListener('submit', (event) => {
+        event.preventDefault();
+        const newFundData = {
+            id: Math.max(...df.map(f => f.id)) + 1, // Assign a new unique ID (assuming your data has 'id')
+            favorite: false,
+            "Fund Name": document.getElementById('fundName').value,
+            "Region": document.getElementById('region').value,
+            "Risk Level": document.getElementById('riskLevel').value,
+            "Management Type": document.getElementById('managementType').value,
+            "Number of Assets": parseInt(document.getElementById('numAssets').value),
+            "Ongoing Charge (OCF)": parseFloat(document.getElementById('ocf').value),
+            "Performance (May 2019 - Apr 2020)": parseFloat(document.getElementById('performance1').value),
+            "Performance (May 2020 - Apr 2021)": parseFloat(document.getElementById('performance2').value),
+            "Performance (May 2021 - Apr 2022)": parseFloat(document.getElementById('performance3').value),
+            "Performance (May 2022 - Apr 2023)": parseFloat(document.getElementById('performance4').value),
+            "Performance (May 2023 - Apr 2024)": parseFloat(document.getElementById('performance5').value),
+        };
+
+        // Send the newFundData to the Flask backend using fetch or AJAX
+        fetch('/update', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newFundData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                df = data.data; // Assuming the backend returns the updated data
+                updateFundTable(df); // Call the updateFundTable function to refresh the table
+
+                // Close the modal
+                closeModal('add-fund-modal');
+            });
+    });
 }
-
-// Event Listeners for Add Fund Modal
-document.getElementById('add-fund-form').addEventListener('submit', (event) => {
-    event.preventDefault();
-    const newFundData = {
-        id: Math.max(...df.map(f => f.id)) + 1, // Assign a new unique ID (assuming your data has 'id')
-        favorite: false,
-        "Fund Name": document.getElementById('fundName').value,
-        "Region": document.getElementById('region').value,
-        "Risk Level": document.getElementById('riskLevel').value,
-        "Management Type": document.getElementById('managementType').value,
-        "Number of Assets": parseInt(document.getElementById('numAssets').value),
-        "Ongoing Charge (OCF)": parseFloat(document.getElementById('ocf').value),
-        "Performance (May 2019 - Apr 2020)": parseFloat(document.getElementById('performance1').value),
-        "Performance (May 2020 - Apr 2021)": parseFloat(document.getElementById('performance2').value),
-        "Performance (May 2021 - Apr 2022)": parseFloat(document.getElementById('performance3').value),
-        "Performance (May 2022 - Apr 2023)": parseFloat(document.getElementById('performance4').value),
-        "Performance (May 2023 - Apr 2024)": parseFloat(document.getElementById('performance5').value),
-    };
-
-    // Send the newFundData to the Flask backend using fetch or AJAX
-    fetch('/update', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newFundData)
-    })
-        .then(response => response.json())
-        .then(data => {
-            df = data.data; // Assuming the backend returns the updated data
-            updateFundTable(df); // Call the updateFundTable function to refresh the table
-
-            // Close the modal
-            closeModal('add-fund-modal');
-        });
-});
-
-
 
 // Bulk Update Modal Functions
 function createBulkUpdateModal() {
@@ -94,50 +92,48 @@ function createBulkUpdateModal() {
             </form>
         </div>
     `;
-
     document.getElementById('bulk-update-modal').innerHTML = modalHtml;
-}
 
-// Event Listeners for Bulk Update Modal
-document.getElementById('bulk-update-form').addEventListener('submit', (event) => {
-    event.preventDefault();
-    const fileInput = document.getElementById('bulk-update-file');
-    const file = fileInput.files[0];
+    // Event Listeners for Bulk Update Modal
+    document.getElementById('bulk-update-form').addEventListener('submit', (event) => {
+        event.preventDefault();
+        const fileInput = document.getElementById('bulk-update-file');
+        const file = fileInput.files[0];
 
-    Papa.parse(file, {
-        header: true,
-        skipEmptyLines: true,
-        complete: function(results) {
-            const updatedData = results.data.map(row => {
-                return {
-                    "id": row['id'], // Make sure you have an ID column in your CSV for updating
-                    "Fund Name": row['Fund Name'],
-                    "Region": row['Region'],
-                    // ... (map other CSV columns to fund properties)
-                    "Performance (May 2023 - Apr 2024)": parseFloat(row['Performance (May 2023 - Apr 2024)']) || 0,
-                    "favorite": df.find(f => f.id === parseInt(row['id']))?.favorite || false // Preserve favorite status
-                };
-            });
+        Papa.parse(file, {
+            header: true,
+            skipEmptyLines: true,
+            complete: function(results) {
+                const updatedData = results.data.map(row => {
+                    return {
+                        "id": row['id'], // Make sure you have an ID column in your CSV for updating
+                        "Fund Name": row['Fund Name'],
+                        "Region": row['Region'],
+                        // ... (map other CSV columns to fund properties)
+                        "Performance (May 2023 - Apr 2024)": parseFloat(row['Performance (May 2023 - Apr 2024)']) || 0,
+                        "favorite": df.find(f => f.id === parseInt(row['id']))?.favorite || false // Preserve favorite status
+                    };
+                });
 
-            // Send the updatedData to the Flask backend
-            fetch('/update', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updatedData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                df = data.data; 
-                updateFundTable(df); 
-
-                closeModal('bulk-update-modal');
-            });
-        },
-        error: function(error) {
-            console.error("Error parsing CSV:", error);
-        }
+                // Send the updatedData to the Flask backend
+                fetch('/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    df = data.data; 
+                    updateFundTable(df); 
+                    //closeModal('bulk-update-modal');
+                });
+            },
+            error: function(error) {
+                console.error("Error parsing CSV:", error);
+            }
+        });
     });
-});
+}
 
 // Open Modal Functions
 function openAddFundModal() {

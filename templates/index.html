@@ -13,23 +13,82 @@
         <h2>Fund Dashboard</h2>
 
         <div id="filters">
+            <div class="filter">
+                <label for="filter-volatility">Volatility:</label>
+                <input type="number" id="filter-volatility" min="0" max="100" value="0" class="small-input">
+                <button class="arrow-button" data-field="filter-volatility" data-direction="up">&#9650;</button>
+                <button class="arrow-button" data-field="filter-volatility" data-direction="down">&#9660;</button>
             </div>
+            <div class="filter">
+                <label for="filter-performance">Performance:</label>
+                <input type="number" id="filter-performance" min="-100" max="100" value="-100" class="small-input">
+                <button class="arrow-button" data-field="filter-performance" data-direction="up">&#9650;</button>
+                <button class="arrow-button" data-field="filter-performance" data-direction="down">&#9660;</button>
+            </div>
+            <div class="filter">
+                <input type="checkbox" id="filter-favorite">
+                <label for="filter-favorite">Favorites</label>
+            </div>
+            <button id="reset-filters">Reset Filters</button>
+            <label for="rows-per-page">Rows per Page:</label>
+            <select id="rows-per-page">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+        </div>
 
         <div class="tables-container"> 
             <div id="shortlist"> 
                 <h2>Shortlist</h2>
                 <p>Total Investment: <span id="total-investment">0.00</span>%</p> 
                 <table id="shortlist-table">
-                    </table>
+                    <thead>
+                        <tr>
+                            <th>Fund Name</th>
+                            <th>Region</th>
+                            <th>Risk Level</th>
+                            <th>Performance Average</th>
+                            <th>Overall Volatility</th>
+                            <th>Investment Percentage</th>
+                            <th>Equivalent Sum</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody> 
+                </table>
             </div>
             <table id="fund-table">
-                </table>
-            <div class="pagination"></div>  
+                <thead>
+                    <tr>
+                        <th>Fund Name</th>
+                        <th>Region</th>
+                        <th>Risk Level</th>
+                        <th>Management Type</th>
+                        <th>Number of Assets</th>
+                        <th>Ongoing Charge (OCF)</th>
+                        <th>Performance (May 2019 - Apr 2020)</th>
+                        <th>Performance (May 2020 - Apr 2021)</th>
+                        <th>Performance (May 2021 - Apr 2022)</th>
+                        <th>Performance (May 2022 - Apr 2023)</th>
+                        <th>Performance (May 2023 - Apr 2024)</th>
+                        <th>Performance Average</th>
+                        <th>Overall Volatility</th>
+                        <th></th>
+                        <th>Favorite</th>
+                        <th>Delete</th>  
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div class="pagination"></div>
         </div>
         <div class="button-container">
             <button id="add-fund-button">Add Fund</button>
             <button id="bulk-update-button">Bulk Update</button>
         </div>
+
         <div id="add-fund-modal" class="modal"></div>
         <div id="bulk-update-modal" class="modal"></div>
     </div>

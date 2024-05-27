@@ -8,7 +8,7 @@ df = pd.read_csv('portfolio_data.csv')
 
 # Check if 'id' column exists, if not, create it
 if 'id' not in df.columns:
-    df['id'] = range(1, len(df) + 1)  # Generate sequential IDs starting from 1
+    df['id'] = range(1, len(df) + 1)
 
 # Load and Save Favorites to a File
 def load_favorites():
@@ -84,7 +84,7 @@ def update_fund():
 
     return jsonify(success=True, data=df.to_dict(orient='records'))
 
-#Correct indentation
+
 def update_or_add_fund(fund_data):
     global df, favorites
     if 'id' in fund_data and int(fund_data['id']) in df['id'].values:  # Update existing fund
@@ -100,6 +100,7 @@ def update_or_add_fund(fund_data):
         favorites.remove(fund_data['id'])
 
     save_favorites(favorites)
-#Correct indentation   
+
 if __name__ == '__main__':
-    app.run(debug=True) 
+    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+    app.run(debug=True)

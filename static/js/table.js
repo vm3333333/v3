@@ -1,88 +1,4 @@
-// Get references to the tables and filter elements
-const fundTable = document.getElementById('fund-table');
-const filterVolatility = document.getElementById('filter-volatility');
-const filterPerformance = document.getElementById('filter-performance');
-const filterFavorite = document.getElementById('filter-favorite');
-const paginationContainer = document.querySelector('.pagination');
-
-// Initialize data and pagination
-let df;
-let rowsPerPage = 10; // Default value
-let currentPage = 1;
-
-// Load and initialize the dashboard
-fetch('/')
-    .then(response => response.json())
-    .then(data => {
-        df = data.data;
-        setupPagination(df.length); // Set up pagination
-        updateFundTable(df); // Initialize table
-    });
-
-// Filter and Sort Data
-function filterAndSortData() {
-    const volatility = parseFloat(filterVolatility.value);
-    const performance = parseFloat(filterPerformance.value);
-    const showFavorites = filterFavorite.checked;
-
-    const queryParams = new URLSearchParams({
-        volatility: isNaN(volatility) ? '' : volatility,
-        performance: isNaN(performance) ? '' : performance,
-        favorites: showFavorites,
-    });
-
-    fetch(`/?${queryParams.toString()}`)
-        .then(response => response.json())
-        .then(data => {
-            df = data.data;
-            currentPage = 1; // Reset to first page when filtering/sorting
-            setupPagination(df.length);
-            updateFundTable(df);
-        });
-}
-
-// Pagination Functions
-function setupPagination(totalRows) {
-    const numPages = Math.ceil(totalRows / rowsPerPage);
-    paginationContainer.innerHTML = ''; 
-    // "Previous" button
-    const prevButton = document.createElement('button');
-    prevButton.textContent = 'Previous';
-    prevButton.disabled = currentPage === 1;
-    prevButton.addEventListener('click', () => {
-        currentPage--;
-        updateFundTable(df);
-    });
-    paginationContainer.appendChild(prevButton);
-
-    // Page number buttons
-    for (let i = 1; i <= numPages; i++) {
-        const button = document.createElement('button');
-        button.textContent = i;
-        button.addEventListener('click', () => {
-            currentPage = i;
-            updateFundTable(df);
-        });
-        paginationContainer.appendChild(button);
-    }
-    // "Next" button
-    const nextButton = document.createElement('button');
-    nextButton.textContent = 'Next';
-    nextButton.disabled = currentPage === numPages;
-    nextButton.addEventListener('click', () => {
-        currentPage++;
-        updateFundTable(df);
-    });
-    paginationContainer.appendChild(nextButton);
-
-    updatePaginationButtons();
-}
-
-function updatePaginationButtons() {
-    // ... (code from previous responses to update the active button and prev/next state)
-}
-
-// Update Fund Table
+// Table Functions
 function updateFundTable(data) {
     const tbody = fundTable.querySelector('tbody');
     tbody.innerHTML = ''; // Clear existing rows
@@ -104,12 +20,20 @@ function updateFundTable(data) {
                 row.appendChild(cell);
             }
         }
+
         // Checkbox for shortlist
         const checkboxCell = document.createElement('td');
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.classList.add('select-fund');
         checkbox.checked = shortlistedFunds.some(f => f.id === fund.id);
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+                addToShortlist(fund.id);
+            } else {
+                removeFromShortlist(fund.id);
+            }
+        });
         checkboxCell.appendChild(checkbox);
         row.appendChild(checkboxCell);
 
@@ -142,6 +66,57 @@ function updateFundTable(data) {
 
     updatePaginationButtons();
 }
+
+// Pagination Functions
+function setupPagination(totalRows) {
+    const numPages = Math.ceil(totalRows / rowsPerPage);
+    paginationContainer.innerHTML = '';
+
+    // "Previous" button
+    const prevButton = document.createElement('button');
+    prevButton.textContent = 'Previous';
+    prevButton.disabled = currentPage === 1;
+    prevButton.addEventListener('click', () => {
+        currentPage--;
+        updateFundTable(df);
+    });
+    paginationContainer.appendChild(prevButton);
+
+    // Page number buttons
+    for (let i = 1; i <= numPages; i++) {
+        const button = document.createElement('button');
+        button.textContent = i;
+        button.addEventListener('click', () => {
+            currentPage = i;
+            updateFundTable(df);
+        });
+        paginationContainer.appendChild(button);
+    }
+
+    // "Next" button
+    const nextButton = document.createElement('button');
+    nextButton.textContent = 'Next';
+    nextButton.disabled = currentPage === numPages;
+    nextButton.addEventListener('click', () => {
+        currentPage++;
+        updateFundTable(df);
+    });
+    paginationContainer.appendChild(nextButton);
+
+    updatePaginationButtons();
+}
+
+function updatePaginationButtons() {
+    const buttons = paginationContainer.querySelectorAll('button');
+    buttons.forEach(button => button.classList.remove('active'));
+    buttons[currentPage].classList.add('active');
+
+    const prevButton = paginationContainer.querySelector('button:first-child');
+    const nextButton = paginationContainer.querySelector('button:last-child');
+    prevButton.disabled = currentPage === 1;
+    nextButton.disabled = currentPage === Math.ceil(df.length / rowsPerPage);
+}
+
 
 // Favorite Functionality
 function toggleFavorite(fundId) {
@@ -179,9 +154,56 @@ function deleteFund(fundId) {
 }
 
 
-// Event Listeners
+// Filter and Sort Data (This should be in table.js since it affects the table directly)
+function filterAndSortData() {
+    const volatility = parseFloat(filterVolatility.value);
+    const performance = parseFloat(filterPerformance.value);
+    const showFavorites = filterFavorite.checked;
+
+    const queryParams = new URLSearchParams({
+        volatility: isNaN(volatility) ? '' : volatility,
+        performance: isNaN(performance) ? '' : performance,
+        favorites: showFavorites,
+    });
+
+    fetch(`/?${queryParams.toString()}`)
+        .then(response => response.json())
+        .then(data => {
+            df = data.data;
+            currentPage = 1; // Reset to first page when filtering/sorting
+            setupPagination(df.length);
+            updateFundTable(df);
+        });
+}
+
+// Event listeners for filters
 filterVolatility.addEventListener('input', filterAndSortData);
 filterPerformance.addEventListener('input', filterAndSortData);
-filterFavorite.addEventListener('change', filterAndSortData);
+filterFavorite.addEventListener('change', filterAndSortData); // New: Favorite filter event listener
+document.getElementById('reset-filters').addEventListener('click', () => {
+    filterVolatility.value = 0;
+    filterPerformance.value = -100;
+    filterFavorite.checked = false;
+    rowsPerPage = parseInt(document.getElementById('rows-per-page').value);
+    filterAndSortData(); // Refresh the table with default filters
+});
 
-// ... (event listeners for arrow buttons, rows per page select, etc. - from previous responses)
+// Rows per Page Change
+document.getElementById('rows-per-page').addEventListener('change', (event) => {
+    rowsPerPage = parseInt(event.target.value);
+    currentPage = 1; // Reset to first page when rowsPerPage changes
+    setupPagination(df.length); // Re-setup pagination
+    updateFundTable(df);       // Refresh the table
+});
+
+
+// Initialize the table and fetch initial data
+let df;
+fetch('/')
+    .then(response => response.json())
+    .then(data => {
+        df = data.data;
+        setupPagination(df.length); // Set up pagination
+        updateFundTable(df);       // Initialize table
+    });
+
