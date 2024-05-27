@@ -1,79 +1,111 @@
-// static/js/shortlist.js
+// Initialize shortlist
+let shortlistedFunds = [];
 
-document.addEventListener('DOMContentLoaded', function() {
-    const fundTable = document.getElementById('fund-table');
-    
-    fundTable.addEventListener('change', function(event) {
-        if (event.target.classList.contains('select-fund')) {
-            updateShortlist();
-        }
-    });
+// Shortlist Functions
+function updateShortlist() {
+    const shortlistTableBody = shortlistTable.querySelector('tbody');
+    shortlistTableBody.innerHTML = ''; // Clear existing rows
 
-    function updateShortlist() {
-        const selectedFunds = [];
-        const rows = fundTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-        
-        for (let row of rows) {
-            const checkbox = row.querySelector('.select-fund');
-            if (checkbox && checkbox.checked) {
-                const fundData = {};
-                const cells = row.getElementsByTagName('td');
-                fundData['Fund Name'] = cells[0].textContent;
-                fundData['Region'] = cells[1].textContent;
-                fundData['Risk Level'] = cells[2].textContent;
-                fundData['Management Type'] = cells[3].textContent;
-                fundData['Number of Assets'] = cells[4].textContent;
-                fundData['Ongoing Charge (OCF)'] = cells[5].textContent;
-                fundData['Performance (May 2019 - Apr 2020)'] = cells[6].textContent;
-                fundData['Performance (May 2020 - Apr 2021)'] = cells[7].textContent;
-                fundData['Performance (May 2021 - Apr 2022)'] = cells[8].textContent;
-                fundData['Performance (May 2022 - Apr 2023)'] = cells[9].textContent;
-                fundData['Performance (May 2023 - Apr 2024)'] = cells[10].textContent;
-                fundData['Performance Average'] = cells[11].textContent;
-                fundData['Overall Volatility'] = cells[12].textContent;
-                selectedFunds.push(fundData);
-            }
-        }
+    const totalInvestment = shortlistedFunds.reduce((sum, fund) => sum + (fund.investmentPercentage || 0), 0); // Calculate total investment
 
-        populateShortlist(selectedFunds);
-    }
+    for (const fund of shortlistedFunds) {
+        const row = fundTable.querySelector(`tr[data-fund-id="${fund.id}"]`);
+        if (row) {
+            const newRow = row.cloneNode(true);
+            newRow.querySelector('.select-fund').remove(); // Remove the checkbox in the shortlist table
+            const favoriteCell = newRow.querySelector('.favorite-cell');
+            favoriteCell.innerHTML = ''; // remove the favorite icon
 
-    function populateShortlist(selectedFunds) {
-        const shortlistSection = document.querySelector('.shortlist-section');
-        shortlistSection.innerHTML = '<h2>Shortlisted Funds</h2>';
-        
-        if (selectedFunds.length === 0) {
-            shortlistSection.innerHTML += '<p>No funds selected.</p>';
-            return;
-        }
-        
-        const table = document.createElement('table');
-        const thead = document.createElement('thead');
-        const tbody = document.createElement('tbody');
-        const headerRow = document.createElement('tr');
-        
-        const headers = ['Fund Name', 'Region', 'Risk Level', 'Management Type', 'Number of Assets', 'Ongoing Charge (OCF)', 'Performance (May 2019 - Apr 2020)', 'Performance (May 2020 - Apr 2021)', 'Performance (May 2021 - Apr 2022)', 'Performance (May 2022 - Apr 2023)', 'Performance (May 2023 - Apr 2024)', 'Performance Average', 'Overall Volatility'];
-        
-        headers.forEach(header => {
-            const th = document.createElement('th');
-            th.textContent = header;
-            headerRow.appendChild(th);
-        });
-        
-        thead.appendChild(headerRow);
-        table.appendChild(thead);
-        
-        selectedFunds.forEach(fund => {
-            const row = document.createElement('tr');
-            headers.forEach(header => {
-                const cell = document.createElement('td');
-                cell.textContent = fund[header];
-                row.appendChild(cell);
+            // Add remove button
+            const removeButton = document.createElement('button');
+            removeButton.textContent = 'Remove';
+            removeButton.onclick = () => removeFromShortlist(fund.id);
+            newRow.insertCell().appendChild(removeButton); // Add remove button to a new cell
+
+            // Add input for investment percentage (with validation)
+            const inputCell = newRow.insertCell();
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.min = '0';
+            input.max = '100';
+            input.step = '0.01';
+            input.value = fund.investmentPercentage || 0; // Use existing percentage or 0
+            input.classList.add('investment-input'); // Add class for styling and event handling
+            input.addEventListener('input', (event) => {
+                const newPercentage = parseFloat(event.target.value);
+                if (isNaN(newPercentage) || newPercentage < 0 || newPercentage > 100) {
+                    event.target.value = fund.investmentPercentage; // Reset to previous valid value
+                    return;
+                }
+                updateInvestment(fund.id, newPercentage);
             });
-            tbody.appendChild(row);
-        });
-        
-        table.appendChild(tbody);
-        shortlistSection.appendChild(table);
+            inputCell.appendChild(input);
+
+            // Add equivalent sum cell
+            const equivalentSumCell = newRow.insertCell();
+            const equivalentSum = calculateEquivalentSum(totalInvestment, fund.investmentPercentage);
+            equivalentSumCell.textContent = equivalentSum.toFixed(2);
+
+            shortlistTableBody.appendChild(newRow);
+        }
     }
-});
+
+    // Update the total investment percentage in the shortlist
+    updateTotalInvestment();
+}
+
+function addToShortlist(fundId) {
+    const fund = df.find(f => f.id === fundId); 
+    if (fund && !shortlistedFunds.some(f => f.id === fundId)) {
+        shortlistedFunds.push({ ...fund, investmentPercentage: 0 }); 
+        updateShortlist();
+    }
+}
+
+function removeFromShortlist(fundId) {
+    shortlistedFunds = shortlistedFunds.filter(fund => fund.id !== fundId);
+    updateShortlist();
+    // Uncheck the checkbox in the main table
+    const checkbox = fundTable.querySelector(`tr[data-fund-id="${fundId}"] .select-fund`);
+    if (checkbox) {
+        checkbox.checked = false;
+    }
+}
+
+// Investment Percentage Update
+function updateInvestment(fundId, newPercentage) {
+    if (newPercentage > 100) {
+        newPercentage = 100; 
+    } else if (newPercentage < 0) {
+        newPercentage = 0; 
+    }
+    
+    const fundIndex = shortlistedFunds.findIndex(fund => fund.id === fundId);
+    const originalPercentage = shortlistedFunds[fundIndex].investmentPercentage;
+    shortlistedFunds[fundIndex].investmentPercentage = newPercentage;
+
+    // Adjust other percentages proportionally (only if total exceeds 100%)
+    const totalPercentage = shortlistedFunds.reduce((sum, fund) => sum + fund.investmentPercentage, 0);
+    if (totalPercentage > 100) {
+        const excessPercentage = totalPercentage - 100;
+        const adjustmentPerFund = excessPercentage / (shortlistedFunds.length - 1); // Exclude the changed fund
+        shortlistedFunds.forEach(fund => {
+            if (fund.id !== fundId) {
+                fund.investmentPercentage = Math.max(0, fund.investmentPercentage - adjustmentPerFund); 
+            }
+        });
+    }
+
+    updateShortlist();
+}
+
+// Update Total Investment in Shortlist
+function updateTotalInvestment() {
+    const totalInvestment = shortlistedFunds.reduce((sum, fund) => sum + (fund.investmentPercentage || 0), 0);
+    document.getElementById('total-investment').textContent = totalInvestment.toFixed(2);
+}
+
+// Calculate Equivalent Sum
+function calculateEquivalentSum(totalInvestment, investmentPercentage) {
+    return (totalInvestment * investmentPercentage) / 100;
+}

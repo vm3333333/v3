@@ -1,0 +1,21 @@
+/* General Styles */
+body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4; /* Light grey background */
+    color: #333; /* Dark grey text */
+}
+
+/* Container Styling */
+.container {
+    max-inline-size: 1200px; /* Updated: max-width to max-inline-size */
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+h2 {
+    margin-block-end: 15px; /* Updated: margin-bottom to margin-block-end */
+}

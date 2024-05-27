@@ -1,30 +1,39 @@
-/* static/css/table.css */
-
+/* Table Styling */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 1rem;
+    margin-bottom: 20px;
 }
 
 th, td {
     border: 1px solid #ddd;
-    padding: 0.75rem;
+    padding: 10px;
     text-align: left;
 }
 
 th {
-    background-color: #f2f2f2;
-    color: #333;
+    background-color: #4CAF50; /* Green header background */
+    color: white;
 }
 
-tr:nth-child(even) {
-    background-color: #f9f9f9;
+/* Table Container Styling */
+.tables-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap; /* Wrap tables to next line on smaller screens */
 }
 
-tr:hover {
-    background-color: #f1f1f1;
+#fund-table, #shortlist-table {
+    width: calc(50% - 10px);
+    box-sizing: border-box;
+    overflow-x: auto;
 }
 
-select-fund {
-    cursor: pointer;
+/* Conditional Formatting */
+.high-performance {
+    background-color: #e0ffe0; /* Light green */
+}
+
+.low-performance {
+    background-color: #ffe0e0; /* Light red */
 }

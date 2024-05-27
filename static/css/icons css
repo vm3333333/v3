@@ -1,0 +1,10 @@
+/* Favorite Star */
+.favorite-cell {
+    text-align: center;
+}
+
+.favorite-star {
+    color: gold;
+    font-size: 20px;
+    cursor: pointer;
+}

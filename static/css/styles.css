@@ -1,33 +1,86 @@
-/* static/css/styles.css */
-
+/* General Styles */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f9;
+    font-family: sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4; /* Light grey background */
+    color: #333; /* Dark grey text */
 }
 
-header {
-    background-color: #0073e6;
-    color: #fff;
-    padding: 1rem;
-    text-align: center;
-}
-
+/* Container Styling */
 .container {
-    padding: 2rem;
+    max-inline-size: 1200px; /* Updated: max-width to max-inline-size */
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 8px;
 }
 
-.filter-section, .table-section, .shortlist-section {
-    margin-bottom: 2rem;
+h2 {
+    margin-block-end: 15px; /* Updated: margin-bottom to margin-block-end */
 }
 
-footer {
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    padding: 1rem;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+/* Table Styling */
+table {
+    inline-size: 100%; /* Updated: width to inline-size */
+    border-collapse: collapse;
+    margin-block-end: 20px; /* Updated: margin-bottom to margin-block-end */
 }
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: start; /* Updated: text-align: left to text-align: start */
+}
+
+th {
+    background-color: #4CAF50; /* Green header background */
+    color: white;
+}
+
+/* Table Container Styling */
+.tables-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#fund-table, #shortlist-table {
+    box-sizing: border-box;
+    overflow-x: auto;
+}
+
+
+/* Conditional Formatting */
+.high-performance {
+    background-color: #e0ffe0; /* Light green */
+}
+
+.low-performance {
+    background-color: #ffe0e0; /* Light red */
+}
+
+/* Filter Styling */
+#filters {
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 5px;
+    margin-block-end: 20px; /* Updated: margin-bottom to margin-block-end */
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 10px;
+}
+
+#filters .filter {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+#filters label {
+    margin-inline-end: 5px; /* Updated: margin-right to margin-inline-end */
+    font-size: 14px;
+}
+
+#filters .small-input {
+    inline-size: 60px; /* Updated: width
