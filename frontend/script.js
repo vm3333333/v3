@@ -19,6 +19,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     loadFavourites();
 
+    function saveFavourites() {
+        localStorage.setItem('favourites', JSON.stringify(Array.from(favourites)));
+    }
+    
+    function loadFavourites() {
+        const savedFavourites = JSON.parse(localStorage.getItem('favourites'));
+        if (savedFavourites) {
+            favourites = new Set(savedFavourites);
+        }
+    }
+
     function getGradientColor(value, min, max, colors) {
         const range = max - min;
         const step = range / (colors.length - 1);
@@ -138,18 +149,34 @@ document.addEventListener('DOMContentLoaded', function() {
         const selectedRegion = filterRegion.value;
         const selectedRisk = filterRisk.value;
         const selectedManagement = filterManagement.value;
+        const performanceThreshold = parseFloat(filterPerformance.value) / 100;
+        const volatilityThreshold = parseFloat(filterVolatility.value) / 100;
+        
         console.log('Updating funds table with filters:', {
             showFavouritesOnly,
             selectedRegion,
             selectedRisk,
-            selectedManagement
+            selectedManagement,
+            performanceThreshold,
+            volatilityThreshold
         });
-
+    
         const minPerformance = Math.min(...fundsData.map(fund => fund['Average Performance']));
         const maxPerformance = Math.max(...fundsData.map(fund => fund['Average Performance']));
         const minVolatility = Math.min(...fundsData.map(fund => fund['Volatility']));
         const maxVolatility = Math.max(...fundsData.map(fund => fund['Volatility']));
-
+    
+        // Update slider ranges and values
+        filterPerformance.min = (minPerformance * 100).toFixed(2);
+        filterPerformance.max = (maxPerformance * 100).toFixed(2);
+        filterPerformance.value = filterPerformance.min;
+        performanceValue.textContent = `${filterPerformance.value}%`;
+    
+        filterVolatility.min = (minVolatility * 100).toFixed(2);
+        filterVolatility.max = (maxVolatility * 100).toFixed(2);
+        filterVolatility.value = filterVolatility.max;
+        volatilityValue.textContent = `${filterVolatility.value}%`;
+    
         fundsData.forEach(fund => {
             if (showFavouritesOnly && !favourites.has(fund['Fund Name'])) {
                 return;
@@ -163,7 +190,13 @@ document.addEventListener('DOMContentLoaded', function() {
             if (selectedManagement && fund['Management Type'] !== selectedManagement) {
                 return;
             }
-
+            if (fund['Average Performance'] < performanceThreshold) {
+                return;
+            }
+            if (fund['Volatility'] > volatilityThreshold) {
+                return;
+            }
+    
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td><input type="checkbox" class="select-fund" data-fund-id="${fund['Fund Name']}"></td>
@@ -179,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
             
             fundsTableBody.appendChild(row);
-
+    
             // Attach event listeners to select checkboxes
             row.querySelector('.select-fund').addEventListener('change', function() {
                 const fundId = this.dataset.fundId;
@@ -191,7 +224,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 updateShortlist();
             });
-
+    
             // Attach event listeners to favourite checkboxes
             row.querySelector('.favourite-fund').addEventListener('change', function() {
                 const fundId = this.dataset.fundId;
@@ -205,18 +238,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-
-    function saveFavourites() {
-        localStorage.setItem('favourites', JSON.stringify(Array.from(favourites)));
-    }
     
-    function loadFavourites() {
-        const savedFavourites = JSON.parse(localStorage.getItem('favourites'));
-        if (savedFavourites) {
-            favourites = new Set(savedFavourites);
-        }
-    }
-
     filterRegion.addEventListener('change', updateFundsTable);
     filterRisk.addEventListener('change', updateFundsTable);
     filterManagement.addEventListener('change', updateFundsTable);
@@ -228,14 +250,14 @@ document.addEventListener('DOMContentLoaded', function() {
         volatilityValue.textContent = `${filterVolatility.value}%`;
         updateFundsTable();
     });
-
+    
     tableHeaders.forEach(header => {
         header.addEventListener('click', function() {
             const column = this.innerText.trim();
             sortData(column);
         });
     });
-
+    
     fetch('/load-data')
         .then(response => response.json())
         .then(data => {
@@ -246,9 +268,10 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             updateFilters();
             updateFundsTable();
-
+    
             totalInvestmentInput.addEventListener('input', updateInvestmentAmounts);
             favouritesOnlyCheckbox.addEventListener('change', updateFundsTable);
         })
-        .catch(error => console.error('Error loading data:', error));
-});
+        .catch(error => console.error('Error loading data:', error));    
+
+})
