@@ -54,15 +54,13 @@ th {
     width: 200px;
 }
 
-#shortlist-section {
-    margin-bottom: 1rem;
-}
-
 #shortlist-container {
+    position: -webkit-sticky; /* For Safari */
     position: sticky;
     top: 60px; /* Adjust based on your header height */
     background-color: #ffffff;
     z-index: 1;
+    margin-bottom: 20px;
 }
 
 #shortlist-table th, #shortlist-table td {
@@ -74,14 +72,6 @@ th {
 #shortlist-table th {
     background-color: #0073e6;
     color: white;
-}
-
-#shortlist-table {
-    position: sticky;
-    top: 60px; /* Adjust based on your header height */
-    background-color: #ffffff;
-    z-index: 1;
-    margin-bottom: 20px;
 }
 
 .performance-excellent {

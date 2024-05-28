@@ -71,8 +71,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>${fund['Management Type']}</td>
                 <td>${fund['Number of Assets']}</td>
                 <td>${fund['Ongoing Charge (OCF)']}</td>
-                <td class="${applyPerformanceColor(fund['Average Performance'], minPerformance, maxPerformance)}">${(fund['Average Performance'] * 100).toFixed(2)}%</td>
-                <td class="${applyVolatilityColor(fund['Volatility'], minVolatility, maxVolatility)}">${(fund['Volatility'] * 100).toFixed(2)}%</td>
+                <td style="background-color: ${applyPerformanceColor(fund['Average Performance'], minPerformance, maxPerformance)}">${(fund['Average Performance'] * 100).toFixed(2)}%</td>
+                <td style="background-color: ${applyVolatilityColor(fund['Volatility'], minVolatility, maxVolatility)}">${(fund['Volatility'] * 100).toFixed(2)}%</td>
                 <td><input type="number" class="allocation-input" data-fund-id="${fund['Fund Name']}" value="${fund.allocation || 0}" step="0.01"></td>
                 <td>${(fund.investmentAmount || 0).toFixed(2)}</td>
             `;
@@ -256,3 +256,4 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => console.error('Error loading data:', error));
 });
+
