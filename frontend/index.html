@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Allocation App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Investment Allocation App</h1>
+    </header>
+    <main>
+        <section id="investment-input-section">
+            <h2>Investment Input</h2>
+            <label for="total-investment">Total Investment Amount:</label>
+            <input type="number" id="total-investment" placeholder="Enter total amount" step="0.01">
+        </section>
+        
+        <section id="shortlist-section">
+            <h2>Shortlist</h2>
+            <table id="shortlist-table">
+                <thead>
+                    <tr>
+                        <th>Fund Name</th>
+                        <th>Region</th>
+                        <th>Risk Level</th>
+                        <th>Management Type</th>
+                        <th>Number of Assets</th>
+                        <th>Ongoing Charge (OCF)</th>
+                        <th>Average Performance</th>
+                        <th>Volatility</th>
+                        <th>Allocation (%)</th>
+                        <th>Investment Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Shortlisted data will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </section>
+
+        <section id="funds-table-section">
+            <h2>All Funds</h2>
+            <table id="funds-table">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Fund Name</th>
+                        <th>Region</th>
+                        <th>Risk Level</th>
+                        <th>Management Type</th>
+                        <th>Number of Assets</th>
+                        <th>Ongoing Charge (OCF)</th>
+                        <th>Average Performance</th>
+                        <th>Volatility</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
