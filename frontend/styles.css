@@ -62,3 +62,43 @@ th {
     background-color: #0073e6;
     color: white;
 }
+
+/* Existing styles... */
+
+.performance-excellent {
+    background-color: #4caf50; /* Green */
+}
+.performance-good {
+    background-color: #8bc34a; /* Light Green */
+}
+.performance-above-average {
+    background-color: #cddc39; /* Lime */
+}
+.performance-average {
+    background-color: #ffeb3b; /* Yellow */
+}
+.performance-below-average {
+    background-color: #ffc107; /* Amber */
+}
+.performance-poor {
+    background-color: #ff5722; /* Deep Orange */
+}
+
+.volatility-very-low {
+    background-color: #4caf50; /* Green */
+}
+.volatility-low {
+    background-color: #8bc34a; /* Light Green */
+}
+.volatility-low-moderate {
+    background-color: #cddc39; /* Lime */
+}
+.volatility-moderate {
+    background-color: #ffeb3b; /* Yellow */
+}
+.volatility-moderate-high {
+    background-color: #ffc107; /* Amber */
+}
+.volatility-high {
+    background-color: #ff5722; /* Deep Orange */
+}

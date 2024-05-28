@@ -40,12 +40,41 @@
             </table>
         </section>
 
+        <section id="filters-section">
+            <h2>Filters</h2>
+            <label for="filter-region">Region:</label>
+            <select id="filter-region">
+                <option value="">All</option>
+                <!-- Options will be dynamically inserted here -->
+            </select>
+            <label for="filter-risk">Risk Level:</label>
+            <select id="filter-risk">
+                <option value="">All</option>
+                <!-- Options will be dynamically inserted here -->
+            </select>
+            <label for="filter-management">Management Type:</label>
+            <select id="filter-management">
+                <option value="">All</option>
+                <!-- Options will be dynamically inserted here -->
+            </select>
+            <label for="filter-performance">Performance:</label>
+            <input type="range" id="filter-performance" min="0" max="100" step="1" value="0">
+            <span id="performance-value">0%</span>
+            <label for="filter-volatility">Volatility:</label>
+            <input type="range" id="filter-volatility" min="0" max="100" step="1" value="0">
+            <span id="volatility-value">0%</span>
+        </section>
+
         <section id="funds-table-section">
             <h2>All Funds</h2>
+            <label for="favourites-only">
+                <input type="checkbox" id="favourites-only"> Show Favourites Only
+            </label>
             <table id="funds-table">
                 <thead>
                     <tr>
                         <th>Select</th>
+                        <th>Favourite</th>
                         <th>Fund Name</th>
                         <th>Region</th>
                         <th>Risk Level</th>
