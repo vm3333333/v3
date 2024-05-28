@@ -26,6 +26,13 @@ table {
     margin-top: 1rem;
 }
 
+table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f2f2f2;
+    z-index: 2;
+}
+
 th, td {
     border: 1px solid #ddd;
     padding: 0.5rem;
@@ -36,7 +43,6 @@ th {
     background-color: #0073e6;
     color: white;
 }
-/* Existing styles... */
 
 #investment-input-section {
     margin-bottom: 1rem;
@@ -52,6 +58,13 @@ th {
     margin-bottom: 1rem;
 }
 
+#shortlist-container {
+    position: sticky;
+    top: 60px; /* Adjust based on your header height */
+    background-color: #ffffff;
+    z-index: 1;
+}
+
 #shortlist-table th, #shortlist-table td {
     border: 1px solid #ddd;
     padding: 0.5rem;
@@ -63,23 +76,34 @@ th {
     color: white;
 }
 
-/* Existing styles... */
+#shortlist-table {
+    position: sticky;
+    top: 60px; /* Adjust based on your header height */
+    background-color: #ffffff;
+    z-index: 1;
+    margin-bottom: 20px;
+}
 
 .performance-excellent {
     background-color: #4caf50; /* Green */
 }
+
 .performance-good {
     background-color: #8bc34a; /* Light Green */
 }
+
 .performance-above-average {
     background-color: #cddc39; /* Lime */
 }
+
 .performance-average {
     background-color: #ffeb3b; /* Yellow */
 }
+
 .performance-below-average {
     background-color: #ffc107; /* Amber */
 }
+
 .performance-poor {
     background-color: #ff5722; /* Deep Orange */
 }
@@ -87,18 +111,39 @@ th {
 .volatility-very-low {
     background-color: #4caf50; /* Green */
 }
+
 .volatility-low {
     background-color: #8bc34a; /* Light Green */
 }
+
 .volatility-low-moderate {
     background-color: #cddc39; /* Lime */
 }
+
 .volatility-moderate {
     background-color: #ffeb3b; /* Yellow */
 }
+
 .volatility-moderate-high {
     background-color: #ffc107; /* Amber */
 }
+
 .volatility-high {
     background-color: #ff5722; /* Deep Orange */
+}
+
+#filters {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#filters label {
+    margin-right: 5px;
+}
+
+#favourites-label {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
 }

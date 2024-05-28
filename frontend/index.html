@@ -17,8 +17,7 @@
             <input type="number" id="total-investment" placeholder="Enter total amount" step="0.01">
         </section>
         
-        <section id="shortlist-section">
-            <h2>Shortlist</h2>
+        <div id="shortlist-container">
             <table id="shortlist-table">
                 <thead>
                     <tr>
@@ -35,41 +34,36 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Shortlisted data will be dynamically inserted here -->
+                    <!-- Shortlist rows will be dynamically added here -->
                 </tbody>
             </table>
-        </section>
+        </div>
+        
 
-        <section id="filters-section">
-            <h2>Filters</h2>
+        <div id="filters">
             <label for="filter-region">Region:</label>
             <select id="filter-region">
                 <option value="">All</option>
-                <!-- Options will be dynamically inserted here -->
             </select>
+        
             <label for="filter-risk">Risk Level:</label>
             <select id="filter-risk">
                 <option value="">All</option>
-                <!-- Options will be dynamically inserted here -->
             </select>
+        
             <label for="filter-management">Management Type:</label>
             <select id="filter-management">
                 <option value="">All</option>
-                <!-- Options will be dynamically inserted here -->
             </select>
-            <label for="filter-performance">Performance:</label>
-            <input type="range" id="filter-performance" min="0" max="100" step="1">
-            <span id="performance-value">0%</span>
-            <label for="filter-volatility">Volatility:</label>
-            <input type="range" id="filter-volatility" min="0" max="100" step="1">
-            <span id="volatility-value">0%</span>
-        </section>
+        
+            <label for="favourites-only" id="favourites-label">
+                <input type="checkbox" id="favourites-only">
+                Show Favourites Only
+            </label>
+        </div>  
 
         <section id="funds-table-section">
             <h2>All Funds</h2>
-            <label for="favourites-only">
-                <input type="checkbox" id="favourites-only"> Show Favourites Only
-            </label>
             <table id="funds-table">
                 <thead>
                     <tr>
