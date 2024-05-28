@@ -2,14 +2,24 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f5f5f5;
 }
 
-header {
-    background-color: #0073e6;
-    color: white;
-    padding: 1rem;
-    text-align: center;
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #fff;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.header label,
+.header input {
+    margin: 5px;
 }
 
 main {
@@ -23,25 +33,44 @@ h1, h2 {
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 1rem;
+    margin-top: 10px;
 }
 
 table thead th {
     position: sticky;
     top: 0;
-    background-color: #f2f2f2;
+    background-color: #0073e6;
     z-index: 2;
 }
 
 th, td {
     border: 1px solid #ddd;
-    padding: 0.5rem;
+    padding: 8px;
     text-align: left;
 }
 
 th {
-    background-color: #0073e6;
+    background-color: #4CAF50;
     color: white;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tbody tr:hover {
+    background-color: #ddd;
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    table {
+        font-size: 14px;
+    }
 }
 
 #investment-input-section {
@@ -54,24 +83,45 @@ th {
     width: 200px;
 }
 
-#shortlist-container {
-    position: -webkit-sticky; /* For Safari */
-    position: sticky;
-    top: 60px; /* Adjust based on your header height */
-    background-color: #ffffff;
-    z-index: 1;
-    margin-bottom: 20px;
-}
-
-#shortlist-table th, #shortlist-table td {
-    border: 1px solid #ddd;
-    padding: 0.5rem;
-    text-align: left;
-}
-
 #shortlist-table th {
-    background-color: #0073e6;
+    background-color: #0073e6; /* Ensure the header for the shortlist is also styled */
     color: white;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.shortlist-container {
+    margin-top: 100px; /* Adjust this if necessary */
+    padding: 10px;
+    background-color: #f9f9f9;
+    overflow-x: auto;
+}
+
+.shortlist-container th {
+    position: sticky;
+    top: 0;
+    background-color: #4CAF50;
+    color: white;
+    z-index: 1;
+}
+
+#funds-table th {
+    position: sticky;
+    top: 0;
+    background-color: #4CAF50;
+    color: white;
+    z-index: 1;
+}
+
+/* Add these styles for drag-and-drop functionality */
+.shortlist-row {
+    cursor: move;
+}
+
+.shortlist-row.dragging {
+    background-color: #f0f0f0;
+    opacity: 0.7;
 }
 
 .performance-excellent {
@@ -130,6 +180,10 @@ th {
 
 #filters label {
     margin-right: 5px;
+}
+
+.filters-container {
+    padding: 10px;
 }
 
 #favourites-label {

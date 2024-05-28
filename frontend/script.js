@@ -12,10 +12,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let favourites = new Set();
     let currentSortColumn = '';
     let currentSortDirection = 'asc';
-
     loadFavourites();
     loadShortlist();
-
     function getGradientColor(value, min, max, colors) {
         const range = max - min;
         const step = range / (colors.length - 1);
@@ -26,21 +24,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return colors[colors.length - 1];
     }
-    
     function applyPerformanceColor(value, min, max) {
         const colors = ['#ff5722', '#ff7043', '#ff8a65', '#ffab91', '#ffd54f', '#dce775', '#aed581', '#81c784', '#4caf50'];
         return getGradientColor(value, min, max, colors);
     }
-    
     function applyVolatilityColor(value, min, max) {
         const colors = ['#4caf50', '#81c784', '#aed581', '#dce775', '#ffd54f', '#ffab91', '#ff8a65', '#ff7043', '#ff5722'];
         return getGradientColor(value, min, max, colors);
     }
-
     function saveShortlist() {
         localStorage.setItem('shortlistData', JSON.stringify(shortlistData));
     }
-
     function loadShortlist() {
         const savedShortlist = JSON.parse(localStorage.getItem('shortlistData'));
         if (savedShortlist) {
@@ -48,22 +42,29 @@ document.addEventListener('DOMContentLoaded', function() {
             updateShortlist();
         }
     }
-
     function saveFavourites() {
         localStorage.setItem('favourites', JSON.stringify(Array.from(favourites)));
     }
-    
     function loadFavourites() {
         const savedFavourites = JSON.parse(localStorage.getItem('favourites'));
         if (savedFavourites) {
             favourites = new Set(savedFavourites);
         }
     }
-
     function updateShortlist() {
         shortlistTableBody.innerHTML = '';
-        shortlistData.forEach(fund => {
+
+        const minPerformance = Math.min(...shortlistData.map(fund => fund['Average Performance']));
+        const maxPerformance = Math.max(...shortlistData.map(fund => fund['Average Performance']));
+        const minVolatility = Math.min(...shortlistData.map(fund => fund['Volatility']));
+        const maxVolatility = Math.max(...shortlistData.map(fund => fund['Volatility']));
+
+        shortlistData.forEach((fund, index) => {
             const row = document.createElement('tr');
+            row.classList.add('shortlist-row');
+            row.setAttribute('draggable', true);
+            row.dataset.index = index;
+
             row.innerHTML = `
                 <td>${fund['Fund Name']}</td>
                 <td>${fund['Region']}</td>
@@ -89,18 +90,81 @@ document.addEventListener('DOMContentLoaded', function() {
                     saveShortlist();
                 }
             });
-        });
-    }
 
+                        // Add drag event listeners
+                        row.addEventListener('dragstart', handleDragStart);
+                        row.addEventListener('dragover', handleDragOver);
+                        row.addEventListener('drop', handleDrop);
+                        row.addEventListener('dragend', handleDragEnd);
+                    });
+    }
+    function handleDragStart(e) {
+        this.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/html', this.dataset.index);
+    }
+    function handleDragOver(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+
+        const draggingRow = document.querySelector('.dragging');
+        if (draggingRow && this !== draggingRow) {
+            const rows = Array.from(shortlistTableBody.querySelectorAll('.shortlist-row'));
+            const draggingIndex = parseInt(draggingRow.dataset.index);
+            const currentIndex = parseInt(this.dataset.index);
+
+            if (currentIndex > draggingIndex) {
+                this.after(draggingRow);
+            } else {
+                this.before(draggingRow);
+            }
+
+            // Update dataset indices
+            rows.forEach((row, index) => {
+                row.dataset.index = index;
+            });
+        }
+    }
+    function handleDrop(e) {
+        e.stopPropagation();
+
+        const draggingIndex = parseInt(e.dataTransfer.getData('text/html'));
+        const targetIndex = parseInt(this.dataset.index);
+
+        if (draggingIndex !== targetIndex) {
+            const draggedItem = shortlistData.splice(draggingIndex, 1)[0];
+            shortlistData.splice(targetIndex, 0, draggedItem);
+
+            // Re-render shortlist
+            updateShortlist();
+            saveShortlist();
+        }
+    }
+    function handleDragEnd() {
+        this.classList.remove('dragging');
+    }
     function updateInvestmentAmounts() {
         const totalInvestment = parseFloat(totalInvestmentInput.value) || 0;
+        let totalAllocation = shortlistData.reduce((sum, fund) => sum + (fund.allocation || 0), 0);
+    
+        if (totalAllocation > 100) {
+            // Adjust allocations proportionally if the total exceeds 100%
+            shortlistData.forEach(fund => {
+                fund.allocation = (fund.allocation / totalAllocation) * 100;
+            });
+            totalAllocation = 100;
+        }
+    
         shortlistData.forEach(fund => {
-            fund.investmentAmount = (fund.allocation || 0) / 100 * totalInvestment;
+            fund.investmentAmount = (fund.allocation / 100) * totalInvestment;
         });
+    
+        const remainingPercentage = 100 - totalAllocation;
+        document.getElementById('remaining-percentage').textContent = `Remaining Allocation: ${remainingPercentage.toFixed(2)}%`;
+    
         updateShortlist();
         saveShortlist();
-    }
-
+    }    
     function sortData(column) {
         if (currentSortColumn === column) {
             currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
@@ -121,7 +185,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         updateFundsTable();
     }
-
     function updateFilters() {
         // Clear existing options
         filterRegion.innerHTML = '<option value="">All</option>';
@@ -153,7 +216,6 @@ document.addEventListener('DOMContentLoaded', function() {
             filterManagement.appendChild(option);
         });
     }
-
     function updateFundsTable() {
         fundsTableBody.innerHTML = '';
         const showFavouritesOnly = favouritesOnlyCheckbox.checked;
@@ -228,18 +290,15 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-
     filterRegion.addEventListener('change', updateFundsTable);
     filterRisk.addEventListener('change', updateFundsTable);
     filterManagement.addEventListener('change', updateFundsTable);
-
     tableHeaders.forEach(header => {
         header.addEventListener('click', function() {
             const column = this.innerText.trim();
             sortData(column);
         });
     });
-
     fetch('/load-data')
         .then(response => response.json())
         .then(data => {
@@ -256,4 +315,3 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => console.error('Error loading data:', error));
 });
-
